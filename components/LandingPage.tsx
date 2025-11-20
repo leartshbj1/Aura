@@ -6,38 +6,8 @@ import {
   MapPin, Mail, Lock, Globe, X, Star, Gem, Smartphone, Store, Coins, Users, PieChart, FileCheck, Globe2,
   Landmark, Scale, FileSearch, Activity, ArrowDown, FileCode, Server, Download, CheckCircle2, AlertCircle,
   HelpCircle, Search, Heart, Laptop, Smartphone as PhoneIcon, Clock, QrCode, Apple, Play, Shield, Monitor, Cpu,
-  Facebook, Youtube, Database, LockKeyhole, Signal
+  Facebook, Youtube, Database, LockKeyhole, Signal, Menu, LayoutGrid
 } from 'lucide-react';
-
-// --- Custom CSS for Advanced Animations ---
-const styleSheet = `
-  .glass-card {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
-  }
-
-  .glass-nav {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-  }
-  
-  button:focus-visible, a:focus-visible {
-    outline: 2px solid #0052FF;
-    outline-offset: 2px;
-  }
-
-  .preserve-3d {
-    transform-style: preserve-3d;
-  }
-  .backface-hidden {
-    backface-visibility: hidden;
-  }
-`;
 
 // --- Translation Data ---
 type Lang = 'fr' | 'en';
@@ -51,7 +21,8 @@ const CONTENT = {
       support: "Support",
       download: "Télécharger Aura",
       personal: "Personnel",
-      business: "Business"
+      business: "Business",
+      about: "Société"
     },
     hero: {
       badge: "Le Nouveau Standard Financier Suisse",
@@ -255,7 +226,8 @@ const CONTENT = {
       support: "Support",
       download: "Download Aura",
       personal: "Personal",
-      business: "Business"
+      business: "Business",
+      about: "Company"
     },
     hero: {
       badge: "The New Swiss Financial Standard",
@@ -452,19 +424,6 @@ const CONTENT = {
     }
   }
 };
-
-// --- Animation Variants ---
-const pageVariants = {
-  initial: { opacity: 0, y: 20 },
-  in: { opacity: 1, y: 0 },
-  out: { opacity: 0, y: -20 }
-};
-
-const pageTransition = {
-  type: "tween",
-  ease: "anticipate",
-  duration: 0.5
-} as const;
 
 // --- Generic Components ---
 
@@ -774,7 +733,7 @@ const AuraCard3D = () => {
   );
 };
 
-// --- New Pages ---
+// --- Page Components ---
 
 const DownloadAppPage = ({ lang }: { lang: Lang }) => {
     const t = CONTENT[lang];
@@ -821,7 +780,7 @@ const DownloadAppPage = ({ lang }: { lang: Lang }) => {
                          <div className="flex flex-wrap gap-4 mb-12">
                              <button className="flex items-center gap-3 bg-white text-slate-900 px-6 py-3 rounded-xl transition-all hover:-translate-y-1 hover:shadow-lg font-bold">
                                  <Apple size={20} />
-                                 Download for macOS
+                                 macOS
                              </button>
                              <button className="flex items-center gap-3 bg-slate-800 text-white border border-slate-700 hover:bg-slate-700 px-6 py-3 rounded-xl transition-all hover:-translate-y-1 hover:shadow-lg font-bold">
                                  <Monitor size={20} />
@@ -841,7 +800,7 @@ const DownloadAppPage = ({ lang }: { lang: Lang }) => {
                              <div>
                                  <p className="font-bold text-white mb-1">{t.download.scan}</p>
                                  <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-swiss-blue/20 text-swiss-blue text-[10px] font-bold uppercase rounded-md">Coming Soon</div>
-                                 <p className="text-xs text-slate-400 mt-1">{t.download.desktopWarning}</p>
+                                 <p className="text-xs text-slate-400 mt-1 max-w-xs">{t.download.desktopWarning}</p>
                              </div>
                          </div>
                     </div>
@@ -1060,22 +1019,6 @@ const StatusPage = ({ lang }: { lang: Lang }) => {
     )
 };
 
-const LegalDocPage = ({ title, children }: { title: string, children: React.ReactNode }) => {
-    useEffect(() => window.scrollTo(0,0), []);
-    return (
-        <div className="pt-32 pb-24 min-h-screen bg-white">
-            <div className="max-w-3xl mx-auto px-6">
-                <h1 className="text-4xl font-serif font-bold text-slate-900 mb-12 border-b border-slate-100 pb-8">{title}</h1>
-                <div className="prose prose-slate prose-lg text-slate-600">
-                    {children}
-                </div>
-            </div>
-        </div>
-    );
-};
-
-// --- Existing Pages (With Modifications) ---
-
 const CHFMPage = ({ lang, onStart }: { lang: Lang, onStart: () => void }) => {
     const t = CONTENT[lang];
     useEffect(() => { window.scrollTo(0, 0); }, []);
@@ -1292,7 +1235,7 @@ const PersonalPage = ({ lang, onStart }: { lang: Lang, onStart: () => void }) =>
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center max-w-4xl mx-auto mb-20">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-swiss-blue text-xs font-bold uppercase mb-6 tracking-widest">
-                        <UserIcon size={12} /> {t.personal.heroBadge}
+                        <Users size={12} /> {t.personal.heroBadge}
                     </div>
                     <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 mb-6 tracking-tight">
                         {t.personal.title}
@@ -1792,287 +1735,219 @@ const PricingPage = ({ lang, onStart }: { lang: Lang, onStart: () => void }) => 
               </div>
           </div>
       </div>
-
     </div>
   </div>
   );
 };
 
-// --- UserIcon Helper for Personal Page ---
-const UserIcon = ({size}: {size: number}) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-);
+const Footer = ({ lang, onNavigate }: { lang: Lang, onNavigate: (p: string) => void }) => {
+  const t = CONTENT[lang];
+  return (
+    <footer className="bg-slate-900 text-slate-400 py-20 border-t border-slate-800">
+        <div className="max-w-7xl mx-auto px-6">
+            <div className="grid md:grid-cols-4 gap-12 mb-16">
+                <div className="col-span-1 md:col-span-2">
+                    <div className="flex items-center gap-2 text-white font-bold text-2xl mb-6">
+                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-slate-900">A</div>
+                        Aura
+                    </div>
+                    <p className="mb-8 max-w-sm text-slate-500">
+                        {t.about.subtitle}
+                    </p>
+                    <div className="bg-white/5 border border-white/10 rounded-2xl p-6 max-w-md">
+                        <h4 className="text-white font-bold mb-2">{t.footer.newsletterTitle}</h4>
+                        <p className="text-sm text-slate-500 mb-4">{t.footer.newsletterDesc}</p>
+                        <div className="flex gap-2">
+                            <input type="email" placeholder={t.footer.newsletterPlaceholder} className="bg-slate-800 border-none rounded-lg px-4 py-2 text-sm text-white w-full focus:ring-1 focus:ring-swiss-blue" />
+                            <button className="bg-swiss-blue text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-600 transition-colors">{t.footer.subscribe}</button>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4 className="text-white font-bold mb-6">{t.footer.cols.platform}</h4>
+                    <ul className="space-y-4 text-sm">
+                        <li><button onClick={() => onNavigate('personal')} className="hover:text-white transition-colors">{t.nav.personal}</button></li>
+                        <li><button onClick={() => onNavigate('business')} className="hover:text-white transition-colors">{t.nav.business}</button></li>
+                        <li><button onClick={() => onNavigate('pricing')} className="hover:text-white transition-colors">{t.nav.pricing}</button></li>
+                        <li><button onClick={() => onNavigate('download')} className="hover:text-white transition-colors">{t.nav.download}</button></li>
+                        <li><button onClick={() => onNavigate('status')} className="hover:text-white transition-colors flex items-center gap-2"><div className="w-2 h-2 bg-green-500 rounded-full"></div> Status</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 className="text-white font-bold mb-6">{t.footer.cols.company}</h4>
+                    <ul className="space-y-4 text-sm">
+                        <li><button onClick={() => onNavigate('about')} className="hover:text-white transition-colors">À propos</button></li>
+                        <li><button onClick={() => onNavigate('careers')} className="hover:text-white transition-colors">Carrières</button></li>
+                        <li><button onClick={() => onNavigate('help')} className="hover:text-white transition-colors">Support</button></li>
+                        <li><button onClick={() => onNavigate('chfm')} className="hover:text-white transition-colors">CHFM (Stablecoin)</button></li>
+                    </ul>
+                </div>
+            </div>
+            <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="text-sm font-medium">© 2024 Aura Financial Technologies AG. Zurich.</div>
+                <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-500">
+                        <ShieldCheck size={14} /> {t.footer.trust}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+  )
+}
 
-// --- Footer & Layout ---
+// --- Main Landing Page Component ---
 
-export default function AuraLanding({ onEnterApp }: { onEnterApp: () => void }) {
-  const [currentPage, setCurrentPage] = useState('home');
-  const [isScrolled, setIsScrolled] = useState(false);
+const pageVariants = {
+  initial: { opacity: 0, y: 20 },
+  in: { opacity: 1, y: 0 },
+  out: { opacity: 0, y: -20 }
+};
+
+const pageTransition = {
+  type: "tween",
+  ease: "anticipate",
+  duration: 0.5
+};
+
+const LandingPage = ({ onEnterApp }: { onEnterApp: () => void }) => {
+  const [page, setPage] = useState<'home' | 'chfm' | 'pricing' | 'personal' | 'business' | 'download' | 'about' | 'careers' | 'help' | 'status' | 'cards'>('home');
   const [lang, setLang] = useState<Lang>('fr');
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const t = CONTENT[lang];
-
-  const NavItem = ({ page, label, isNew = false }: { page: string, label: string, isNew?: boolean }) => (
-    <button 
-      onClick={() => { setCurrentPage(page); window.scrollTo(0, 0); }}
-      className={`text-sm font-bold transition-colors flex items-center gap-2 px-4 py-2 rounded-full hover:bg-slate-100 focus:outline-none ${
-        currentPage === page ? 'text-swiss-blue bg-blue-50' : 'text-slate-600'
-      }`}
-    >
-      {label}
-      {isNew && <span className="bg-red-100 text-swiss-red text-[10px] font-extrabold px-1.5 py-0.5 rounded-md">NEW</span>}
-    </button>
-  );
-
-  const FooterLink = ({ page, label }: { page: string, label: string }) => (
-      <li>
-          <button onClick={() => { setCurrentPage(page); window.scrollTo(0, 0); }} className="hover:text-white transition-colors text-left flex items-center gap-2 group">
-              <span className="w-1 h-1 bg-slate-600 rounded-full group-hover:bg-swiss-blue transition-colors"></span>
-              {label}
-          </button>
-      </li>
-  );
-
-  const handleDownloadRedirect = () => {
-      setCurrentPage('download');
-      window.scrollTo(0,0);
+  const handleNavigate = (p: string) => {
+      setPage(p as any);
+      setMobileMenuOpen(false);
   };
 
+  const t = CONTENT[lang];
+
+  // Main download action - navigates to download page
+  const handleDownloadAction = () => handleNavigate('download');
+
   return (
-    <div className="min-h-screen bg-swiss-ice font-sans selection:bg-swiss-blue selection:text-white overflow-x-hidden flex flex-col">
-      <style>{styleSheet}</style>
-
-      <nav className={`fixed w-full z-50 transition-all duration-500 px-4 md:px-8 py-4 ${isScrolled ? 'py-3' : 'py-6'}`}>
-        <div className={`max-w-7xl mx-auto rounded-full px-6 py-3 flex justify-between items-center transition-all duration-500 ${isScrolled ? 'glass-nav shadow-sm' : 'bg-transparent'}`}>
-          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setCurrentPage('home')}>
-            <div className="w-10 h-10 bg-swiss-navy rounded-xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform duration-300">
-              <span className="font-bold text-xl tracking-tighter">A</span>
+    <div className="font-sans text-slate-900 bg-swiss-ice">
+      {/* Navigation */}
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled || page !== 'home' ? 'bg-white/90 backdrop-blur-md border-b border-slate-100 py-4 shadow-sm' : 'bg-transparent py-6'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          <div 
+            className="flex items-center gap-2 cursor-pointer group" 
+            onClick={() => handleNavigate('home')}
+          >
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors duration-300 ${isScrolled || page !== 'home' ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}`}>
+              <span className="font-bold text-xl">A</span>
             </div>
-            <span className="text-xl font-bold tracking-tight text-slate-900">Aura</span>
-          </div>
-          
-          <div className="hidden lg:flex items-center gap-1">
-            <NavItem page="home" label={t.nav.home} />
-            <NavItem page="personal" label={t.nav.personal} />
-            <NavItem page="business" label={t.nav.business} />
-            <NavItem page="chfm" label={t.nav.stablecoin} isNew />
-            <NavItem page="pricing" label={t.nav.pricing} />
+            <span className={`font-bold text-xl tracking-tight ${isScrolled || page !== 'home' ? 'text-slate-900' : 'text-slate-900'}`}>Aura</span>
           </div>
 
-          <div className="flex items-center gap-4">
-            <button onClick={() => setCurrentPage('help')} className="hidden sm:block text-sm font-bold text-slate-900 hover:text-swiss-blue transition-colors">{t.nav.support}</button>
-            <button onClick={handleDownloadRedirect} className="bg-swiss-navy text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-swiss-blue transition-all shadow-lg hover:shadow-swiss-blue/30 hover:-translate-y-0.5 transform flex items-center gap-2">
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center gap-8">
+            <button onClick={() => handleNavigate('home')} className="text-sm font-medium text-slate-600 hover:text-swiss-blue transition-colors">{t.nav.home}</button>
+            <button onClick={() => handleNavigate('chfm')} className="text-sm font-medium text-slate-600 hover:text-swiss-blue transition-colors">{t.nav.stablecoin}</button>
+            <button onClick={() => handleNavigate('cards')} className="text-sm font-medium text-slate-600 hover:text-swiss-blue transition-colors">Cartes</button>
+            <button onClick={() => handleNavigate('pricing')} className="text-sm font-medium text-slate-600 hover:text-swiss-blue transition-colors">{t.nav.pricing}</button>
+          </div>
+
+          <div className="hidden md:flex items-center gap-4">
+            <div className="flex items-center bg-slate-100 rounded-full p-1">
+                 <button 
+                    onClick={() => handleNavigate('personal')}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${page === 'personal' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+                 >
+                     {t.nav.personal}
+                 </button>
+                 <button 
+                    onClick={() => handleNavigate('business')}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${page === 'business' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+                 >
+                     {t.nav.business}
+                 </button>
+            </div>
+            
+            <button 
+                onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
+                className="w-8 h-8 flex items-center justify-center rounded-full border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50"
+            >
+                {lang.toUpperCase()}
+            </button>
+
+            <button 
+                onClick={handleDownloadAction}
+                className="bg-slate-900 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
+            >
                 <Download size={16} />
                 {t.nav.download}
             </button>
           </div>
+
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden p-2 text-slate-900"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <Menu />
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+            {mobileMenuOpen && (
+                <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="md:hidden bg-white border-b border-slate-100 overflow-hidden"
+                >
+                    <div className="px-6 py-8 flex flex-col gap-6">
+                        <button onClick={() => handleNavigate('home')} className="text-lg font-medium text-slate-900">{t.nav.home}</button>
+                        <button onClick={() => handleNavigate('chfm')} className="text-lg font-medium text-slate-900">{t.nav.stablecoin}</button>
+                         <button onClick={() => handleNavigate('cards')} className="text-lg font-medium text-slate-900">Cartes</button>
+                        <button onClick={() => handleNavigate('pricing')} className="text-lg font-medium text-slate-900">{t.nav.pricing}</button>
+                        <hr className="border-slate-100" />
+                        <button onClick={() => handleNavigate('personal')} className="text-lg font-medium text-slate-600">{t.nav.personal}</button>
+                        <button onClick={() => handleNavigate('business')} className="text-lg font-medium text-slate-600">{t.nav.business}</button>
+                        <Button onClick={handleDownloadAction} className="w-full">{t.nav.download}</Button>
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
       </nav>
 
-      <main className="flex-grow">
-        <AnimatePresence mode="wait">
-          {currentPage === 'home' && (
-             <motion.div key="home" initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-               <HomePage lang={lang} onStart={handleDownloadRedirect} onNavigate={setCurrentPage} />
-             </motion.div>
-          )}
-          {currentPage === 'personal' && (
-             <motion.div key="personal" initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-               <PersonalPage lang={lang} onStart={handleDownloadRedirect} />
-             </motion.div>
-          )}
-           {currentPage === 'business' && (
-             <motion.div key="business" initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-               <BusinessPage lang={lang} onStart={handleDownloadRedirect} />
-             </motion.div>
-          )}
-          {currentPage === 'chfm' && (
-             <motion.div key="chfm" initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-               <CHFMPage lang={lang} onStart={handleDownloadRedirect} />
-             </motion.div>
-          )}
-          {currentPage === 'pricing' && (
-             <motion.div key="pricing" initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-               <PricingPage lang={lang} onStart={handleDownloadRedirect} />
-             </motion.div>
-          )}
-          {currentPage === 'cards' && (
-             <motion.div key="cards" initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-               <CardsPage lang={lang} onStart={handleDownloadRedirect} />
-             </motion.div>
-          )}
-          
-          {/* New Dedicated Pages */}
-          {currentPage === 'about' && (
-             <motion.div key="about" initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-               <AboutPage lang={lang} />
-             </motion.div>
-          )}
-          {currentPage === 'careers' && (
-             <motion.div key="careers" initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-               <CareersPage lang={lang} />
-             </motion.div>
-          )}
-          {currentPage === 'help' && (
-             <motion.div key="help" initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-               <HelpPage lang={lang} />
-             </motion.div>
-          )}
-          {currentPage === 'status' && (
-             <motion.div key="status" initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-               <StatusPage lang={lang} />
-             </motion.div>
-          )}
-          {currentPage === 'legal' && (
-             <motion.div key="legal" initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-               <LegalDocPage title={lang === 'fr' ? "Mentions Légales" : "Legal Notice"}>
-                    <h3>1. Éditeur du Site</h3>
-                    <p>Le site Aura est édité par Aura Technologies AG, société anonyme de droit suisse au capital de 100'000 CHF.</p>
-                    <p>Siège social : Bahnhofstrasse 1, 8001 Zürich, Suisse.</p>
-                    <p>UID : CHE-123.456.789</p>
+      {/* Page Content */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={page}
+          initial="initial"
+          animate="in"
+          exit="out"
+          variants={pageVariants}
+          transition={pageTransition}
+        >
+          {page === 'home' && <HomePage lang={lang} onStart={handleDownloadAction} onNavigate={handleNavigate} />}
+          {page === 'chfm' && <CHFMPage lang={lang} onStart={handleDownloadAction} />}
+          {page === 'pricing' && <PricingPage lang={lang} onStart={handleDownloadAction} />}
+          {page === 'personal' && <PersonalPage lang={lang} onStart={handleDownloadAction} />}
+          {page === 'business' && <BusinessPage lang={lang} onStart={handleDownloadAction} />}
+          {page === 'cards' && <CardsPage lang={lang} onStart={handleDownloadAction} />}
+          {page === 'download' && <DownloadAppPage lang={lang} />}
+          {page === 'about' && <AboutPage lang={lang} />}
+          {page === 'careers' && <CareersPage lang={lang} />}
+          {page === 'help' && <HelpPage lang={lang} />}
+          {page === 'status' && <StatusPage lang={lang} />}
+        </motion.div>
+      </AnimatePresence>
 
-                    <h3>2. Régulation</h3>
-                    <p>Aura Technologies AG est affiliée à un Organisme d'Autorégulation (OAR) reconnu par la FINMA dans le cadre de la loi sur le blanchiment d'argent (LBA).</p>
-
-                    <h3>3. Propriété Intellectuelle</h3>
-                    <p>L'ensemble de ce site relève de la législation suisse et internationale sur le droit d'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés.</p>
-               </LegalDocPage>
-             </motion.div>
-          )}
-          {currentPage === 'privacy' && (
-             <motion.div key="privacy" initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-               <LegalDocPage title={lang === 'fr' ? "Politique de Confidentialité" : "Privacy Policy"}>
-                    <h3>1. Collection des Données</h3>
-                    <p>Nous collectons uniquement les données strictement nécessaires à l'ouverture de compte (KYC) et au bon fonctionnement des services bancaires et blockchain.</p>
-
-                    <h3>2. Non-Divulgation</h3>
-                    <p>Aura Technologies AG s'engage à ne jamais vendre vos données personnelles à des tiers.</p>
-
-                    <h3>3. Sécurité</h3>
-                    <p>Vos données sont hébergées exclusivement en Suisse dans des centres de données certifiés Tier-IV.</p>
-               </LegalDocPage>
-             </motion.div>
-          )}
-          {/* Download App Page */}
-          {currentPage === 'download' && (
-             <motion.div key="download" initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-               <DownloadAppPage lang={lang} />
-             </motion.div>
-          )}
-        </AnimatePresence>
-      </main>
-
-      <footer className="bg-slate-900 text-white pt-20 pb-12 mt-auto relative overflow-hidden">
-        {/* Ambient Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-swiss-blue opacity-5 rounded-full blur-[120px] pointer-events-none"></div>
-        
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mb-16 border-b border-slate-800 pb-16">
-            {/* Brand Column */}
-            <div className="lg:col-span-2 space-y-8">
-               <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-900 font-bold text-xl">A</div>
-                  <span className="text-2xl font-bold">Aura</span>
-              </div>
-              <p className="text-slate-400 text-lg leading-relaxed max-w-md">
-                  {lang === 'fr' 
-                   ? "La première néo-banque suisse qui unifie réellement l'univers bancaire traditionnel et la finance décentralisée."
-                   : "The first Swiss neo-bank that truly unifies traditional banking and decentralized finance."}
-              </p>
-              <div className="flex gap-4">
-                  <a href="#" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-swiss-blue transition-colors"><Twitter size={18} /></a>
-                  <a href="#" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-swiss-blue transition-colors"><Linkedin size={18} /></a>
-                  <a href="#" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-swiss-blue transition-colors"><Instagram size={18} /></a>
-                  <a href="#" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-swiss-blue transition-colors"><Facebook size={18} /></a>
-                  <a href="#" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-swiss-blue transition-colors"><Youtube size={18} /></a>
-              </div>
-            </div>
-
-            {/* Links Columns */}
-            <div>
-              <h4 className="font-bold text-white mb-6 text-lg">{t.footer.cols.company}</h4>
-              <ul className="space-y-4 text-sm text-slate-400 font-medium">
-                <FooterLink page="about" label={lang === 'fr' ? "À propos" : "About"} />
-                <FooterLink page="careers" label={lang === 'fr' ? "Carrières" : "Careers"} />
-                <FooterLink page="pricing" label={t.nav.pricing} />
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-white mb-6 text-lg">{t.footer.cols.product}</h4>
-              <ul className="space-y-4 text-sm text-slate-400 font-medium">
-                <FooterLink page="personal" label={t.nav.personal} />
-                <FooterLink page="business" label={t.nav.business} />
-                <FooterLink page="cards" label="Aura Metal Card" />
-                <FooterLink page="chfm" label="CHFM Stablecoin" />
-              </ul>
-            </div>
-            
-            {/* Newsletter Column */}
-            <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
-                 <h4 className="font-bold text-white mb-2">{t.footer.newsletterTitle}</h4>
-                 <p className="text-slate-400 text-sm mb-4">{t.footer.newsletterDesc}</p>
-                 <div className="flex gap-2 mb-4">
-                     <input 
-                        type="email" 
-                        placeholder={t.footer.newsletterPlaceholder}
-                        className="bg-slate-900 border border-slate-700 text-white text-sm rounded-lg block w-full p-2.5 focus:ring-swiss-blue focus:border-swiss-blue outline-none"
-                     />
-                     <button className="bg-swiss-blue hover:bg-blue-600 text-white rounded-lg px-3 transition-colors">
-                         <ArrowRight size={18} />
-                     </button>
-                 </div>
-                 <div className="flex items-center gap-2 text-[10px] text-slate-500">
-                     <Lock size={10} /> {t.footer.trust}
-                 </div>
-            </div>
-          </div>
-          
-          {/* Bottom Bar */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-             <div className="flex flex-col md:flex-row items-center gap-6">
-                 <p className="text-slate-500 text-sm font-medium">
-                    &copy; 2025 Aura Technologies AG.
-                 </p>
-                 <div className="flex gap-6 text-sm text-slate-500">
-                    <button onClick={() => setCurrentPage('legal')} className="hover:text-white transition-colors">{lang === 'fr' ? "Mentions Légales" : "Legal Notice"}</button>
-                    <button onClick={() => setCurrentPage('privacy')} className="hover:text-white transition-colors">{lang === 'fr' ? "Confidentialité" : "Privacy Policy"}</button>
-                    <button onClick={() => setCurrentPage('help')} className="hover:text-white transition-colors">{lang === 'fr' ? "Aide" : "Help"}</button>
-                 </div>
-             </div>
-
-             <div className="flex items-center gap-4">
-                 {/* Language Switcher */}
-                 <div className="flex items-center gap-2 bg-slate-800 p-1 rounded-full border border-slate-700">
-                      <button 
-                        onClick={() => setLang('fr')}
-                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${lang === 'fr' ? 'bg-slate-600 text-white' : 'text-slate-400 hover:text-white'}`}
-                      >
-                          FR
-                      </button>
-                      <button 
-                        onClick={() => setLang('en')}
-                        className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${lang === 'en' ? 'bg-slate-600 text-white' : 'text-slate-400 hover:text-white'}`}
-                      >
-                          EN
-                      </button>
-                  </div>
-                  
-                  {/* Trust Badges */}
-                  <div className="flex items-center gap-3 px-4 py-2 bg-slate-800 rounded-full border border-slate-700 cursor-pointer hover:bg-slate-700 transition-colors" onClick={() => setCurrentPage('status')}>
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">Systems Normal</span>
-                  </div>
-             </div>
-          </div>
-        </div>
-      </footer>
+      {/* Footer */}
+      <Footer lang={lang} onNavigate={handleNavigate} />
     </div>
   );
-}
+};
+
+export default LandingPage;
